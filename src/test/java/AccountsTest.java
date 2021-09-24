@@ -25,8 +25,6 @@ public void setup()
 	
 	Acc.create_account("dawood", "Islambad","03016666600",105,"saving",21000, date, date, t, 0.0, 0.0);
 	
-	
-
 }
 	@Test
 	public void test_login_account_exist() {                      //when account exist

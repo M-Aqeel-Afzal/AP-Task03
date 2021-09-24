@@ -8,7 +8,7 @@ public class Customer {
 	 class node {
  String Name;
  String Address;
- int Contact;
+ String Contact;
  int AccountID;
  String  type;
  double balance=0;
@@ -18,7 +18,7 @@ public class Customer {
  double fee_t=0;
  double interest=0.0;
 	node next;
-node(String n,String addr,int con,int id,String flg,double bal,String dat,String tran,String t,double ft,double intr)
+node(String n,String addr,String con,int id,String flg,double bal,String dat,String tran,String t,double ft,double intr)
 {
 	Name=n;
 	Address=addr;
@@ -34,7 +34,7 @@ node(String n,String addr,int con,int id,String flg,double bal,String dat,String
 }
 	}
 	
-	public Customer insert(Customer C_list,String n,String addr,int con,int id,String flg,double bal,String dat,String tran,String t,double ft,double intr)
+	public Customer insert(Customer C_list,String n,String addr,String con,int id,String flg,double bal,String dat,String tran,String t,double ft,double intr)
     {
        
         node temp_node = new node(n,addr,con,id,flg,bal,dat,tran,t,ft,intr);
@@ -59,17 +59,18 @@ node(String n,String addr,int con,int id,String flg,double bal,String dat,String
         return C_list;
     }
 	
-	public Customer deleteAccount(Customer C_list, int id)
+	public Customer deleteAccount(int id)
 {
-node temp = C_list.head, prev = null;
+node temp = this.head, prev = null;
 
 if (temp != null && temp.AccountID == id) {
-C_list.head = temp.next; // Changed head
+this.head = temp.next; // Changed head
 
 
-System.out.println(id + " Account founded and deleted");
-return C_list;
+System.out.println("Account founded and deleted");
+return this;
 }
+else {
 
 
 while (temp != null && temp.AccountID != id) {
@@ -80,30 +81,29 @@ while (temp != null && temp.AccountID != id) {
 
 if (temp != null) {
     prev.next = temp.next;
-    System.out.println(id + " Account founded and deleted");
+    System.out.println("Account founded and deleted");
 }
 
 if (temp == null) {
-    System.out.println(id + " Account not found");
+    System.out.println("Account not found");
+}
+return this;
 }
 
 
-return C_list;
 }
 	
 	
-	public void Login(Customer C_list, int id)
+	public boolean Login(int id)
 	{
-	node temp = C_list.head, prev = null;
+	node temp = this.head, prev = null;
 
 	if (temp != null && temp.AccountID == id) {
 	
-		 System.out.println();
-	        System.out.println("Holder Name: " + temp.Name + "\nAccount ID: " + temp.AccountID + "\nAddress: " + temp.Address
-	        		+ "\nContact: " + temp.Contact + "\nAccount Type: " + temp.type + "\n\nBalance: " + temp.balance +"\n\nLast Transection: : " + temp.date_created + "\n\n\n");
-
-	
+		 System.out.println("Login Successful!");
+	return true;
 	}
+	else {
 
 
 	while (temp != null && temp.AccountID != id) {
@@ -113,17 +113,17 @@ return C_list;
 
 
 	if (temp != null) {
-		 System.out.println();
-	        System.out.println("Holder Name: " + temp.Name + "\nAccount ID: " + temp.AccountID + "\nAddress: " + temp.Address
-	        		+ "\nContact: " + temp.Contact + "\nAccount Type: " + temp.type + "\n\nBalance: " + temp.balance +"\n\nLast Transection: : " + temp.date_created + "\n\n\n");
-
+		 System.out.println("Login Successful!");
+		 return true;
 	}
 
 	if (temp == null) {
-	    System.out.println(id + " Account not found");
+	    System.out.println("Account not found");
+	    return false;
+	}
 	}
 
-
+	return true;
 	
 	}
 	
@@ -150,10 +150,10 @@ return C_list;
 	
 	
 	
-	public Customer makeDeposit(Customer C_list,double b,int id)  //deposit function
+	public void makeDeposit(double b,int id)  //deposit function
 	{
 
-node temp = C_list.head, prev = null;
+node temp = this.head, prev = null;
 
 if (temp != null && temp.AccountID == id) {
 	temp.balance+=b;
@@ -166,10 +166,10 @@ if (temp != null && temp.AccountID == id) {
 	temp.last_T="Deposied " + b;
     temp.last_transection=date;
     
-System.out.println(id + "Deposit Successful---!");
-return C_list;
-}
+System.out.println("Deposit Successful---!");
 
+}
+else {
 
 while (temp != null && temp.AccountID != id) {
     prev = temp;
@@ -187,22 +187,20 @@ if (temp != null) {
 	String date = d.format(dat);
     temp.last_transection=date;
     temp.last_T="Deposied " + b;
-	System.out.println(id + "Deposit Successful---!");
+	System.out.println("Deposit Successful---!");
 }
 
 if (temp == null) {
-    System.out.println( " Account not found");
+    System.out.println( "Account not found");
+}
 }
 
-
-return C_list;
-		
 		
 	}
-	public Customer makeWithDraw(Customer C_list,double b,int id)  //Withdraw function
+	public void makeWithDraw(double b,int id)  //Withdraw function
 	{
 
-node temp = C_list.head, prev = null;
+node temp = this.head, prev = null;
 
 if (temp != null && temp.AccountID == id) {
 	temp.balance-=b;
@@ -214,8 +212,8 @@ if (temp != null && temp.AccountID == id) {
 	String date = d.format(dat);
     temp.last_transection=date;
     
-System.out.println(id + "Withdraw Successful---!");
-return C_list;
+System.out.println("Withdraw Successful---!");
+
 }
 
 
@@ -236,28 +234,28 @@ if (temp != null) {
 	String date = d.format(dat);
     temp.last_transection=date;
     
-	System.out.println(id + "Withdraw Successful---!");
+	System.out.println("Withdraw Successful---!");
 }
 
 if (temp == null) {
-    System.out.println(id + " Account not found");
+    System.out.println("Account not found");
 }
 
 
-return C_list;
+
 		
 		
 	}
-	public void CheckBalance(int id)  //CheckBalance function          
+	public double CheckBalance(int id)  //CheckBalance function          
 	{
 
 node temp = this.head, prev = null;
 
 if (temp != null && temp.AccountID == id) {
-System.out.println( "Your Account Balance is: " + temp.balance);
 
+return temp.balance;
 }
-
+else {
 
 while (temp != null && temp.AccountID != id) {
     prev = temp;
@@ -266,15 +264,19 @@ while (temp != null && temp.AccountID != id) {
 
 
 if (temp != null) {
-	System.out.println( "Your Account Balance is: " + temp.balance);
+	
+	return temp.balance;
 }
 
 if (temp == null) {
-    System.out.println( " Account not found");
+    System.out.println( "Account not found");
+    
 }
 
 
-		
+}
+
+return 0;	
 	}
 public void printStatement(int id)              //printing transection statement
 
@@ -315,7 +317,7 @@ public void printStatement(int id)              //printing transection statement
 		
 }
 
-public void calculateZakat(int id)            //zakat calution
+public double calculateZakat(int id)            //zakat calution
 {
 
 node temp = this.head, prev = null;
@@ -323,12 +325,12 @@ node temp = this.head, prev = null;
 if (temp != null && temp.AccountID == id&& temp.type.equals("saving")&&temp.balance>=20000) {
 	
 	double zak=(temp.balance*2.5)/100;
-System.out.println( "Zakat on your Account Balance is: " + zak);
+return zak;
 	
 
 }
 
-
+else {
 while (temp != null && temp.AccountID != id) {
     prev = temp;
     temp = temp.next;
@@ -337,15 +339,16 @@ while (temp != null && temp.AccountID != id) {
 
 if (temp != null&& temp.type.equals("saving")&&temp.balance>=20000) {
 	double zak=(temp.balance*2.5)/100;
-	System.out.println( "Zakat on your Account Balance is: " + zak);
+	return zak;
 }
 
 if (temp == null) {
     System.out.println( " Account not found or balance is less then 20000/-");
 }
-
 }
-public void deduction(int id)                                 //deduction function      
+return 0;
+}
+public double deduction(int id)                                 //deduction function      
 {
 
 node temp = this.head, prev = null;
@@ -353,23 +356,18 @@ node temp = this.head, prev = null;
 	if (temp != null && temp.AccountID == id) {
 		if(temp.type.equals("saving"))
 		{
-			System.out.println( "Account Owner Name " + temp.Name);
-			System.out.println( "Account ID " + temp.AccountID);
-			System.out.println( "Current Account Balance " + temp.balance);
-			System.out.println( "Account Type is " + temp.type);
-				System.out.println( "Tax is: " + temp.fee_t);
+			
+			return temp.fee_t;				
 		}
 		else
 		{
 			double zak=(temp.balance*2.5)/100;
-			System.out.println( "Account Owner Name " + temp.Name);
-			System.out.println( "Account ID " + temp.AccountID);
-			System.out.println( "Current Account Balance " + temp.balance);
-			System.out.println( "Account Type is " + temp.type);
-			System.out.println( "Zakat is: " + zak);
+			return zak;
 		}
 
 }
+	else
+	{
 
 
 while (temp != null && temp.AccountID != id) {
@@ -381,20 +379,13 @@ while (temp != null && temp.AccountID != id) {
 if (temp != null) {
 	if(temp.type.equals("saving"))
 	{
-		System.out.println( "Account Owner Name " + temp.Name);
-		System.out.println( "Account ID " + temp.AccountID);
-		System.out.println( "Current Account Balance " + temp.balance);
-		System.out.println( "Account Type is " + temp.type);
-			System.out.println( "Tax is: " + temp.fee_t);
+		
+			return temp.fee_t;		
 	}
 	else
 	{
 		double zak=(temp.balance*2.5)/100;
-		System.out.println( "Account Owner Name " + temp.Name);
-		System.out.println( "Account ID " + temp.AccountID);
-		System.out.println( "Current Account Balance " + temp.balance);
-		System.out.println( "Account Type is " + temp.type);
-		System.out.println( "Zakat is: " + zak);
+		return zak;
 	}
 }
 
@@ -403,11 +394,13 @@ if (temp == null) {
 }
 
 }
+	return 0;
+}
 
 
 
 
-public void interest(double intr,int id)                //interest function
+public double interest(double intr,int id)                //interest function
 {
 
 node temp = this.head, prev = null;
@@ -416,24 +409,21 @@ node temp = this.head, prev = null;
 		System.out.println( "entered");
 		if(temp.type.equals("saving"))
 		{
-			System.out.println( "Account Owner Name " + temp.Name);
-			System.out.println( "Account ID " + temp.AccountID);
-			System.out.println( "Current Account Balance " + temp.balance);
-			System.out.println( "Account Type is " + temp.type);
+			
 				temp.interest=(temp.balance*intr)/100;
-				System.out.println( "total interest is: " + temp.interest);
+				return temp.interest;
 		}
 		else
 		{
 			
-			System.out.println( "Account Owner Name " + temp.Name);
-			System.out.println( "Account ID " + temp.AccountID);
-			System.out.println( "Current Account Balance " + temp.balance);
-			System.out.println( "Account Type is " + temp.type);
-			System.out.println( "therefore interest in not applicable. ");
+			return -1;
 		}
 
 }
+	else
+	{
+	
+
 
 
 while (temp != null && temp.AccountID != id) {
@@ -445,28 +435,23 @@ while (temp != null && temp.AccountID != id) {
 if (temp != null) {
 	if(temp.type.equals("saving"))
 	{
-		System.out.println( "Account Owner Name " + temp.Name);
-		System.out.println( "Account ID " + temp.AccountID);
-		System.out.println( "Current Account Balance " + temp.balance);
-		System.out.println( "Account Type is " + temp.type);
+		
 			temp.interest=(temp.balance*intr)/100;
-			System.out.println( "total interest is: " + temp.interest);
+			return temp.interest;
+			
 	}
 	else 
 	{
-		
-		System.out.println( "Account Owner Name " + temp.Name);
-		System.out.println( "Account ID " + temp.AccountID);
-		System.out.println( "Current Account Balance " + temp.balance);
-		System.out.println( "Account Type is " + temp.type);
-		System.out.println( "therefore interest in not applicable. ");
+		return -1;
 	}
 }
 
 if (temp == null) {
-    System.out.println( " Account not found");
+    System.out.println( "Account not found");
 }
 	
+}
+	return 0;
 }
 	
 }

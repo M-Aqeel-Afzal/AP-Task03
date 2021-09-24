@@ -1,6 +1,6 @@
 
  class MainMenu {
-static void menu1() {
+ void menu1() {
 		
 System.out.println("<<*******>  Main Menu <*******>>");
 System.out.print("\n  Enter Account Type\n");

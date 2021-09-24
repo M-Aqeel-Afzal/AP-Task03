@@ -3,98 +3,44 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-public class Admin {
-	Customer list = new Customer();
-	double interestRate=0;
-public void create_account()                      //Create a new Account
-{
-	System.out.println("Enter Name of Customer");
-	
-	Scanner obj= new Scanner(System.in);
-	String name="";
-	 
-		 name= obj.nextLine();
-	 
-	
-	
-	System.out.println("Enter Address");
-	String addr= obj.nextLine();
-	
-	System.out.println("Enter Account Type");
-	String type= obj.nextLine();
-	
-	System.out.println("Enter Phone number");
-	int con= obj.nextInt();
-	
-	System.out.println("Enter Account ID");
-	int id= obj.nextInt();
-	
-	System.out.println("Enter Intial Balance");
-	double bal= obj.nextDouble();
-	while(bal<0)
+public class Admin extends MainMenu {
+	Customer list;
+	double interestRate;
+	public Admin()
 	{
-		System.out.println("Amount cannot be negative:");
-		System.out.println("Enter Intial Balance Again");
-		bal= obj.nextDouble();
+		list = new Customer();
+		interestRate=0;
 	}
+public void create_account(String n,String addr,String con,int id,String flg,double bal,String dat,String tran,String t,double ft,double intr)                      //Create a new Account
+{
 	
-	DateTimeFormatter d= DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' hh:mm a z");
-	ZonedDateTime dat = ZonedDateTime.now();
-	String date = d.format(dat);
-	 String t="Deposited " + bal;
-   list=list.insert(list,name,addr,con,id,type,bal,date,date,t,0.0,0.0);
+   list=list.insert(list,n,addr,con,id,flg,bal,dat,tran,t,ft,intr);
 //obj.close();
 }
-public void deposit()
+public void deposit(double b,int id)
 {
-	System.out.println("Enter Account ID");
-	Scanner obj= new Scanner(System.in);
-	int id= obj.nextInt();
-	System.out.println("\nEnter Amount: \n");
-	int b= obj.nextInt();
-	while(b<0)
-	{
-		System.out.println("Amount cannot be negative:");
-		System.out.println("Enter Again");
-		b= obj.nextInt();
-	}
-	list=list.makeDeposit(list,b,id);
-}
-
-public void withdraw()
-{
-	System.out.println("Enter Account ID");
-	Scanner obj= new Scanner(System.in);
-	int id= obj.nextInt();
-	System.out.println("\nEnter Amount: \n");
-	int b= obj.nextInt();
-	while(b<0)
-	{
-		System.out.println("Amount cannot be negative:");
-		System.out.println("Enter Again");
-		b= obj.nextInt();
-	}
-	list=list.makeWithDraw(list,b,id);
-}
-
-public void close_account()                      //Close or Delete a Sepecific Account
-{
-	System.out.println("Enter Account ID");
-	Scanner obj= new Scanner(System.in);
-	int id= obj.nextInt();
 	
-   list=list.deleteAccount(list,id);
+	list.makeDeposit(b,id);
+}
+
+public void withdraw(double b,int id)
+{
+	
+	list.makeWithDraw(b,id);
+}
+
+public void close_account(int id)                      //Close or Delete a Sepecific Account
+{
+	
+   list=list.deleteAccount(id);
 
 }
 
-public void LoginAccount()            //login to specific Account
+public boolean LoginAccount(int id)            //login to specific Account
 {
-	System.out.println("Enter Account ID");
-	Scanner obj= new Scanner(System.in);
-	int id= obj.nextInt();
-	
-   list.Login(list,id);
-obj.close();
+
+   boolean b=list.Login(id);
+return b;
 }
 
 public void DisplayAll()          //Display All Accounts
@@ -104,19 +50,9 @@ public void DisplayAll()          //Display All Accounts
 
 }
 
-public void InterestRate()          //Interest Rate sepecifer function
+public void InterestRate(double intr)          //Interest Rate sepecifer function
 {
-	System.out.println("Previous Interest Rate is:" + interestRate );
-	System.out.println("\nEnter new value of Interest Rate:");
-	Scanner obj= new Scanner(System.in);
-	interestRate= obj.nextInt();
-	while(interestRate<0)
-	{
-		System.out.println("Amount cannot be negative:");
-		System.out.println("Enter Again");
-		interestRate= obj.nextInt();
-	}
-	System.out.println("\nInterest Rate Updated\n");
+	interestRate=intr;
 }
 /*
 public void DisplayAllDeductions()          //Display All Accounts
@@ -130,45 +66,36 @@ public void DisplayAllDeductions()          //Display All Accounts
 
 }
 */
-public void transferAmount()           //transferAmount function
+public boolean transferAmount(double b,int id1,int id2)           //transferAmount function
 {
-	System.out.println("\nEnter Sender Account ID:\n");
-	Scanner obj= new Scanner(System.in);
-	int id1= obj.nextInt();
-	System.out.println("\nEnter Reciver Account ID:\n");
-	int id2= obj.nextInt();
-	System.out.println("\nEnter Amount: \n");
-	int b= obj.nextInt();
-	while(b<0)
-	{
-		System.out.println("Amount cannot be negative:");
-		System.out.println("Enter Again");
-		b= obj.nextInt();
+	boolean flag1=LoginAccount(id1);
+	boolean flag2=LoginAccount(id1);
+	
+	if(flag1==true&&flag2==true)
+	{ list.makeWithDraw(b,id1);
+	list.makeDeposit(b,id2);
+	return true;
 	}
-	list.makeWithDraw(list,b,id1);
-	list.makeDeposit(list,b,id2);
+	else return false;
 }
 	
-public void DisplayAllDeductions()       //displaying all deduction
+public double DisplayAllDeductions(int id)       //displaying all deduction
 {
-	System.out.println("Enter Account ID");
-	Scanner obj= new Scanner(System.in);
-	int id= obj.nextInt();
-	list.deduction(id);
+	
+	double temp=list.deduction(id);
+	return temp;
 }
-public void calculatelnterest()     //calculating all interest
+public double calculatelnterest(int id)     //calculating all interest
 {
-	System.out.println("Enter Account ID");
-	Scanner obj= new Scanner(System.in);
-	int id= obj.nextInt();
-	list.interest(interestRate,id);
+	
+	double temp=list.interest(interestRate,id);
+	return temp;
 }
-public void balance()
+public double balance(int id)
 {
-	System.out.println("Enter Account ID");
-	Scanner obj= new Scanner(System.in);
-	int id= obj.nextInt();
-	list.CheckBalance(id);
+	
+	double b=list.CheckBalance(id);
+	return b;
 }
 
 public void pstatement()
@@ -179,13 +106,11 @@ public void pstatement()
 	list.CheckBalance(id);
 list.printStatement(id);
 }
-public void ZakatFun()
+public double ZakatFun(int id)
 {
-	System.out.println("Enter Account ID");
-	Scanner obj= new Scanner(System.in);
-	int id= obj.nextInt();
-	list.CheckBalance(id);
-list.calculateZakat(id);
+	
+double temp=list.calculateZakat(id);
+return temp;
 }
 
 }

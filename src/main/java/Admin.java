@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -20,16 +21,26 @@ public void create_account(String n,String addr,String con,int id,String flg,dou
 public void deposit(double b,int id)
 {
 	
-	list.makeDeposit(b,id);
+	try {
+		list.makeDeposit(b,id);
+	} catch (IOException e) {
+		System.out.println("Error occured");
+		e.printStackTrace();
+	}
 }
 
 public void withdraw(double b,int id)
 {
 	
-	list.makeWithDraw(b,id);
+	try {
+		list.makeWithDraw(b,id);
+	} catch (IOException e) {
+		System.out.println("Error occured");
+		e.printStackTrace();
+	}
 }
 
-public void close_account(int id)                      //Close or Delete a Sepecific Account
+public void close_account(int id) throws IOException                      //Close or Delete a Sepecific Account
 {
 	
    list=list.deleteAccount(id);
@@ -66,15 +77,28 @@ public void DisplayAllDeductions()          //Display All Accounts
 
 }
 */
+@SuppressWarnings("finally")
 public boolean transferAmount(double b,int id1,int id2)           //transferAmount function
 {
 	boolean flag1=LoginAccount(id1);
 	boolean flag2=LoginAccount(id1);
 	
 	if(flag1==true&&flag2==true)
-	{ list.makeWithDraw(b,id1);
-	list.makeDeposit(b,id2);
-	return true;
+	{ try {
+		list.makeWithDraw(b,id1);
+	} catch (IOException e1) {
+		System.out.println("Error occured");
+		e1.printStackTrace();
+	}
+	try {
+		list.makeDeposit(b,id2);
+	} catch (IOException e) {
+		System.out.println("Error occured");
+		e.printStackTrace();
+	}
+	finally {
+		return true;
+		}
 	}
 	else return false;
 }
@@ -106,11 +130,20 @@ public void pstatement()
 	list.CheckBalance(id);
 list.printStatement(id);
 }
+@SuppressWarnings("finally")
 public double ZakatFun(int id)
 {
 	
-double temp=list.calculateZakat(id);
+double temp=0;
+try {
+	temp = list.calculateZakat(id);
+} catch (IOException e) {
+	System.out.println("Error occured");
+	e.printStackTrace();
+}
+finally {
 return temp;
+}
 }
 
 }

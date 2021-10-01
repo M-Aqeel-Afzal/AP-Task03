@@ -1,3 +1,4 @@
+import java.io.IOException;
 import java.io.InputStream;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -72,7 +73,12 @@ public class Accounts extends Admin {
 		    	 System.out.println("Enter Account ID");
 		    		 obj= new Scanner(System.in);
 		    		 id= obj.nextInt();
-		    	 close_account(id);
+					try {
+						close_account(id);
+					} catch (IOException e) {
+						 System.out.println("Error!");
+						e.printStackTrace();
+					}
 		    	 break;
 		     case 3:
 		    	 System.out.println("Enter Account ID:");

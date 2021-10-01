@@ -1,6 +1,23 @@
 import java.time.LocalDate;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Scanner;
+import java.util.List;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;  // Import the File class
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
+import java.io.FileWriter;
 
 //import java.io.*;
 public class Customer {
@@ -20,6 +37,17 @@ public class Customer {
 	node next;
 node(String n,String addr,String con,int id,String flg,double bal,String dat,String tran,String t,double ft,double intr)
 {
+	try {
+	      File myfile = new File("accounts.txt");
+	      if (myfile.createNewFile()) {
+	        System.out.println("File has been created!" + myfile.getName());
+	      } else {	        
+	      }
+	    } catch (IOException e) {
+	      System.out.println("Error occurred!");
+	      e.printStackTrace();
+	    }
+	  
 	Name=n;
 	Address=addr;
 	Contact=con;
@@ -36,7 +64,47 @@ node(String n,String addr,String con,int id,String flg,double bal,String dat,Str
 	
 	public Customer insert(Customer C_list,String n,String addr,String con,int id,String flg,double bal,String dat,String tran,String t,double ft,double intr)
     {
-       
+		String temp="";
+		boolean flag=true;
+		try {
+		      FileWriter myfile = new FileWriter("accounts.txt",true);
+		      
+		      try {
+		          File myObj = new File("accounts.txt");
+		          
+		          Scanner myReader = new Scanner(myObj);
+		          while (myReader.hasNextLine()) {
+		            String data = myReader.nextLine();
+		            String[] arr = data.split(",");    
+
+		            for ( String ss : arr) {
+		                temp=ss;
+		                if(temp.equals("ACC_ID-"+id))
+		                	flag=false;
+		               
+		                break;
+		            }
+		            
+		          }
+		          myReader.close();
+		        } catch (FileNotFoundException e) {
+		          System.out.println("An error occurred.");
+		          e.printStackTrace();
+		        }
+		      
+		      if(flag)
+		      {  myfile.write("ACC_ID-"+id +","+"Name-"+ n +"," +"Contect-"+ con +"," +"Address-"+ addr +"," +"ACC_Type-"+ flg +"," +"ACC_Balance-"+ bal +"," +"ACC_CreatedAt-"+ dat +"," +"LastTransection-"+ tran +"," +"tex-"+ t +"," +"Transection-fee-"+ ft +"," +"Interest-"+ intr +"\r\n");
+		      myfile.close();
+		      System.out.println("Registration Successfull");
+		      }
+		      else 
+		      {
+		    	  System.out.println("Account Already Exists");
+		      }
+		    } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
         node temp_node = new node(n,addr,con,id,flg,bal,dat,tran,t,ft,intr);
         temp_node.next = null;
    
@@ -54,15 +122,85 @@ node(String n,String addr,String con,int id,String flg,double bal,String dat,Str
            
             last.next = temp_node;
         }
-   
+		
        
         return C_list;
     }
 	
-	public Customer deleteAccount(int id)
+	public Customer deleteAccount(int id) throws IOException 
 {
 node temp = this.head, prev = null;
+String temp1="";
+String lineToRemove = "bbb";
+FileInputStream instream = null;
+FileOutputStream outstream = null;
 
+try {
+    File myObj = new File("accounts.txt");
+    
+    Scanner myReader = new Scanner(myObj);
+    while (myReader.hasNextLine()) {
+      String data = myReader.nextLine();
+      String[] arr = data.split(",");    
+
+      for ( String ss : arr) {
+          temp1=ss;
+          if(temp1.equals("ACC_ID-"+id))
+        	  lineToRemove=data;
+        //  System.out.println("Account founded");
+          break;
+      }
+      
+    }
+    myReader.close();
+  } catch (FileNotFoundException e) {
+    System.out.println("An error occurred.");
+    e.printStackTrace();
+  }
+File myObj = new File("accounts.txt");
+File tempFile = new File("myTempFile.txt");
+
+BufferedReader reader= new BufferedReader(new FileReader(myObj));
+
+BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile));
+
+
+String currentLine;
+
+	while((currentLine = reader.readLine()) != null) {
+	    // trim newline when comparing with lineToRemove
+	    String trimmedLine = currentLine.trim();
+	    if(trimmedLine.equals(lineToRemove)) continue;
+	    writer.write(currentLine + System.getProperty("line.separator"));
+	}
+writer.close(); 
+reader.close(); 
+boolean successful = tempFile.renameTo(myObj);
+try{
+    
+
+    instream = new FileInputStream(tempFile);
+    outstream = new FileOutputStream(myObj);
+
+    byte[] buffer = new byte[1024];
+
+    int length;
+    /*copying the contents from input stream to
+     * output stream using read and write methods
+     */
+    while ((length = instream.read(buffer)) > 0){
+    	outstream.write(buffer, 0, length);
+    }
+
+    //Closing the input/output file streams
+    instream.close();
+    outstream.close();
+
+   
+
+}catch(IOException ioe){
+	ioe.printStackTrace();
+ }
 if (temp != null && temp.AccountID == id) {
 this.head = temp.next; // Changed head
 
@@ -96,6 +234,47 @@ return this;
 	
 	public boolean Login(int id)
 	{
+		
+		
+		
+		
+		
+		
+		
+		String temp1="";
+		boolean flag=true;
+		try {
+		      FileWriter myfile = new FileWriter("accounts.txt",true);
+		      
+		      try {
+		          File myObj = new File("accounts.txt");
+		          
+		          Scanner myReader = new Scanner(myObj);
+		          while (myReader.hasNextLine()) {
+		            String data = myReader.nextLine();
+		            String[] arr = data.split(",");    
+
+		            for ( String ss : arr) {
+		            	temp1=ss;
+		                if(temp1.equals("ACC_ID-"+id))
+		                {	 System.out.println("Login Successful!");
+		               flag=false;
+		                break;}
+		            }
+		            
+		          }
+		         
+		          if(flag)
+		        	  System.out.println("Account not found");
+		          myReader.close();
+		        } catch (FileNotFoundException e) {
+		          System.out.println("An error occurred.");
+		          e.printStackTrace();
+		        }
+		  } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
 	node temp = this.head, prev = null;
 
 	if (temp != null && temp.AccountID == id) {
@@ -113,12 +292,13 @@ return this;
 
 
 	if (temp != null) {
-		 System.out.println("Login Successful!");
+		// System.out.println("Login Successful!");
 		 return true;
 	}
 
 	if (temp == null) {
-	    System.out.println("Account not found");
+	   // System.out.println("Account not found");
+	    
 	    return false;
 	}
 	}
@@ -131,7 +311,34 @@ return this;
 	
 	public void ShowAllAccount()
 	{
-	    node temp = this.head;
+		
+
+		
+		String temp1="";
+		boolean flag=true;
+		try {
+		      FileWriter myfile = new FileWriter("accounts.txt",true);
+		      
+		      try {
+		          File myObj = new File("accounts.txt");
+		          
+		          Scanner myReader = new Scanner(myObj);
+		          while (myReader.hasNextLine()) {
+		            String data = myReader.nextLine();
+		            System.out.println(data);
+		          }
+		         
+		         
+		          myReader.close();
+		        } catch (FileNotFoundException e) {
+		          System.out.println("An error occurred.");
+		          e.printStackTrace();
+		        }
+		  } catch (IOException e) {
+		      System.out.println("An error occurred.");
+		      e.printStackTrace();
+		    }
+	 /*   node temp = this.head;
 
 	    System.out.print(" All Bank Accounts Are: ");
 
@@ -144,14 +351,100 @@ return this;
 	       
 	        temp = temp.next;
 	    }
-
+*/
 	    System.out.println();
 	}
 	
 	
 	
-	public void makeDeposit(double b,int id)  //deposit function
+	public void makeDeposit(double b,int id) throws IOException  //deposit function
+	
 	{
+		String name,addr,con,flg,da,tran,t;
+		double ft,bal,intr;
+		int j=-1;
+		boolean flag=true;
+		String tempp="",reqrline="";
+		String str1="ACC_ID-"+id;
+		
+		 try {
+	          File myObj = new File("accounts.txt");
+	          
+	          Scanner myReader = new Scanner(myObj);
+	          while (myReader.hasNextLine()) {
+	            String data = myReader.nextLine();
+	            String[] arr = data.split(",");    
+
+	            for ( String ss : arr) {
+	            	if(flag)
+	            	tempp=ss;
+	            	if(flag==false)
+                	{
+	            		if(j==6)
+	            		{
+	            			
+	            			
+	            			   String numb= ss.replaceAll("[^0-9]", "");
+	            			
+	            			double ba = Double.parseDouble(numb);
+	            			
+	            			ba=ba+b;
+	            			
+	            			ss="ACC_Balance-"+ba;
+	            			
+	            			
+	            			
+	            		}
+	            		if(j==3)
+	            		{
+	            			
+	            			ss="Deposited-" + b;	
+	            		}
+	            		str1=str1+","+ss;
+                	
+                	j--;}
+	                if(tempp.equals("ACC_ID-"+id)&&flag)
+	                { 	reqrline=data;
+	                flag=false;
+	                j=10;
+	                }
+	                
+	                	
+	                if(j==0)
+	                {//str1=str1+"";
+	                break;}
+	               
+	            }
+	            if(flag==false)
+	            	break;
+	            
+	           
+	          }
+	          if(flag)
+	          System.out.println( "Account not found");
+	          myReader.close();
+	        } catch (FileNotFoundException e) {
+	          System.out.println("error occurred.");
+	          e.printStackTrace();
+	        }
+		
+		Path path = Paths.get("accounts.txt");
+		List<String> file_cont= new ArrayList<>(Files.readAllLines(path, StandardCharsets.UTF_8));
+		
+
+		
+
+		for (int i = 0; i < file_cont.size(); i++) {
+		    if (file_cont.get(i).equals(reqrline)) {
+		    	 System.out.println("running");
+			  //    String str=id +","+ n +"," + con +"," + addr +"," + flg +"," + "Deposited "+ +"," + dat +"," + tran +"," + t +"," + ft +"," + intr +"\r\n";
+
+		    	 file_cont.set(i,str1);
+		        break;
+		    }
+		}
+		
+		Files.write(path, file_cont, StandardCharsets.UTF_8);
 
 node temp = this.head, prev = null;
 
@@ -191,20 +484,107 @@ if (temp != null) {
 }
 
 if (temp == null) {
-    System.out.println( "Account not found");
+    //System.out.println( "Account not found");
 }
 }
 
 		
 	}
-	public void makeWithDraw(double b,int id)  //Withdraw function
+	public void makeWithDraw(double b,int id) throws IOException  //Withdraw function
 	{
+		String name,addr,con,flg,da,tran,t;
+		double ft,bal,intr;
+		int j=-1;
+		boolean flag=true;
+		String tempp="",reqrline="";
+		String str1="ACC_ID-"+id;
+		
+		 try {
+	          File myObj = new File("accounts.txt");
+	          
+	          Scanner myReader = new Scanner(myObj);
+	          while (myReader.hasNextLine()) {
+	            String data = myReader.nextLine();
+	            String[] arr = data.split(",");    
+
+	            for ( String ss : arr) {
+	            	if(flag)
+	            	tempp=ss;
+	            	if(flag==false)
+                	{
+	            		if(j==6)
+	            		{
+	            			
+	            			
+	            			   String numb= ss.replaceAll("[^0-9]", "");
+	            			
+	            			double ba = Double.parseDouble(numb);
+	            			 System.out.println("----------->  "+ba);
+	            			 if(b>ba)
+	            			{
+	            				 System.out.println("Account balance is not Enough! ");
+	            			}else
+	            			{
+	            				ba=ba-b;
+	            			}
+	            			 System.out.println("----------->  "+ba);
+	            			ss="ACC_Balance-"+ba;
+	            			
+	            			
+	            			
+	            		}
+	            		if(j==3)
+	            		{
+	            			
+	            			ss="WithDrawn-" + b;	
+	            		}
+	            		str1=str1+","+ss;
+                	
+                	j--;}
+	                if(tempp.equals("ACC_ID-"+id)&&flag)
+	                { 	reqrline=data;
+	                flag=false;
+	                j=10;
+	                }
+	                
+	                	
+	                if(j==0)
+	                {//str1=str1+"";
+	                break;}
+	               
+	            }
+	            if(flag==false)
+	            	break;
+	            
+	           
+	          }
+	          myReader.close();
+	        } catch (FileNotFoundException e) {
+	          System.out.println("error occurred.");
+	          e.printStackTrace();
+	        }
+		
+		Path path = Paths.get("accounts.txt");
+		List<String> file_cont= new ArrayList<>(Files.readAllLines(path, StandardCharsets.UTF_8));
+		
+
+		
+
+		for (int i = 0; i < file_cont.size(); i++) {
+		    if (file_cont.get(i).equals(reqrline)) {
+		    	
+		    	 file_cont.set(i,str1);
+		        break;
+		    }
+		}
+		
+		Files.write(path, file_cont, StandardCharsets.UTF_8);
 
 node temp = this.head, prev = null;
 
 if (temp != null && temp.AccountID == id) {
 	temp.balance-=b;
-	temp.last_T="WithDrawn " + b;
+	temp.last_T="WithDrawn-" + b;
 	if(temp.type.equals("Checking")||temp.type.equals("checking"))
 		temp.fee_t +=10;
 	DateTimeFormatter d= DateTimeFormatter.ofPattern("MM/dd/yyyy 'at' hh:mm a z");
@@ -225,7 +605,7 @@ while (temp != null && temp.AccountID != id) {
 
 if (temp != null) {
 	temp.balance-=b;
-	temp.last_T="WithDrawn " + b;
+	temp.last_T="WithDrawn-" + b;
 	
 	if(temp.type.equals("Checking")||temp.type.equals("checking"))
 		temp.fee_t +=10;
@@ -249,6 +629,83 @@ if (temp == null) {
 	public double CheckBalance(int id)  //CheckBalance function          
 	{
 
+		
+		
+		String name,addr,con,flg,da,tran,t;
+		double ft,bal,intr;
+		int j=-1;
+		boolean flag=true;
+		String tempp="",reqrline="";
+		String str1="ACC_ID-"+id;
+		
+		 try {
+	          File myObj = new File("accounts.txt");
+	          
+	          Scanner myReader = new Scanner(myObj);
+	          while (myReader.hasNextLine()) {
+	            String data = myReader.nextLine();
+	            String[] arr = data.split(",");    
+
+	            for ( String ss : arr) {
+	            	if(flag)
+	            	tempp=ss;
+	            	if(flag==false)
+                	{
+	            		if(j==6)
+	            		{
+	            			
+	            			
+	            			   String numb= ss.replaceAll("[^0-9]", "");
+	            			
+	            			double ba = Double.parseDouble(numb);
+	            			
+	            				 System.out.println("Account balance is: "+ ba);
+	            			
+	            			
+	            			
+	            			
+	            			
+	            		}
+	            		
+	            		
+                	
+                	j--;}
+	                if(tempp.equals("ACC_ID-"+id)&&flag)
+	                { 
+	                flag=false;
+	                j=10;
+	                }
+	                
+	                	
+	                if(j==0)
+	                {//str1=str1+"";
+	                break;}
+	               
+	            }
+	            if(flag==false)
+	            	break;
+	            
+	           
+	          }
+	          if(flag)
+	        	  System.out.println( "Account not found");
+	          myReader.close();
+	        } catch (FileNotFoundException e) {
+	          System.out.println("error occurred.");
+	          e.printStackTrace();
+	        }
+		
+		
+
+		
+		
+		
+		
+		
+		
+		
+		
+		
 node temp = this.head, prev = null;
 
 if (temp != null && temp.AccountID == id) {
@@ -269,7 +726,7 @@ if (temp != null) {
 }
 
 if (temp == null) {
-    System.out.println( "Account not found");
+  //  System.out.println( "Account not found");
     
 }
 
@@ -317,14 +774,100 @@ public void printStatement(int id)              //printing transection statement
 		
 }
 
-public double calculateZakat(int id)            //zakat calution
+public double calculateZakat(int id) throws IOException            //zakat calution
 {
 
+	double ba=0,zak;
+	String name,addr,con,flg,da,tran,t;
+	double ft,bal,intr;
+	int j=-1;
+	boolean flag=true;
+	String tempp="",reqrline="";
+	String str1="ACC_ID-"+id;
+	
+	 try {
+          File myObj = new File("accounts.txt");
+          
+          Scanner myReader = new Scanner(myObj);
+          while (myReader.hasNextLine()) {
+            String data = myReader.nextLine();
+            String[] arr = data.split(",");    
+
+            for ( String ss : arr) {
+            	if(flag)
+            	tempp=ss;
+            	if(flag==false)
+            	{
+            		if(j==6)
+            		{
+            			
+            			
+            			   String numb= ss.replaceAll("[^0-9]", "");
+            			  if( ba>=20000)
+            			{ba = Double.parseDouble(numb);
+            			zak=(ba*2.5)/100;
+            			 System.out.println( "Zakat on the Account is: "+zak);
+            			}
+            			  else
+            			  {
+            				  System.out.println( "Balance is less then 20000/-");
+            			  }
+            		
+            		}
+            		
+            		str1=str1+","+ss;
+            	
+            	j--;}
+                if(tempp.equals("ACC_ID-"+id)&&flag)
+                { 	reqrline=data;
+                flag=false;
+                j=10;
+                }
+                
+                	
+                if(j==0)
+                {//str1=str1+"";
+                break;}
+               
+            }
+            if(flag==false)
+            	break;
+            
+           
+          }
+          if(flag)
+          System.out.println( "Account not found");
+          myReader.close();
+
+        } catch (FileNotFoundException e) {
+          System.out.println("error occurred.");
+          e.printStackTrace();
+        }
+	
+	Path path = Paths.get("accounts.txt");
+	List<String> file_cont= new ArrayList<>(Files.readAllLines(path, StandardCharsets.UTF_8));
+	
+
+	
+
+	for (int i = 0; i < file_cont.size(); i++) {
+	    if (file_cont.get(i).equals(reqrline)) {
+	    	 System.out.println("running");
+		  //    String str=id +","+ n +"," + con +"," + addr +"," + flg +"," + "Deposited "+ +"," + dat +"," + tran +"," + t +"," + ft +"," + intr +"\r\n";
+
+	    	 file_cont.set(i,str1);
+	        break;
+	    }
+	}
+	
+	Files.write(path, file_cont, StandardCharsets.UTF_8);
+
+	
 node temp = this.head, prev = null;
 
 if (temp != null && temp.AccountID == id&& temp.type.equals("saving")&&temp.balance>=20000) {
 	
-	double zak=(temp.balance*2.5)/100;
+	 zak=(temp.balance*2.5)/100;
 return zak;
 	
 
@@ -338,19 +881,19 @@ while (temp != null && temp.AccountID != id) {
 
 
 if (temp != null&& temp.type.equals("saving")&&temp.balance>=20000) {
-	double zak=(temp.balance*2.5)/100;
+	 zak=(temp.balance*2.5)/100;
 	return zak;
 }
 
 if (temp == null) {
-    System.out.println( " Account not found or balance is less then 20000/-");
+ //   System.out.println( " Account not found or balance is less then 20000/-");
 }
 }
 return 0;
 }
 public double deduction(int id)                                 //deduction function      
 {
-
+	double zak=0;
 node temp = this.head, prev = null;
 
 	if (temp != null && temp.AccountID == id) {
@@ -361,7 +904,7 @@ node temp = this.head, prev = null;
 		}
 		else
 		{
-			double zak=(temp.balance*2.5)/100;
+			 zak=(temp.balance*2.5)/100;
 			return zak;
 		}
 
@@ -384,7 +927,7 @@ if (temp != null) {
 	}
 	else
 	{
-		double zak=(temp.balance*2.5)/100;
+		zak=(temp.balance*2.5)/100;
 		return zak;
 	}
 }
@@ -394,7 +937,7 @@ if (temp == null) {
 }
 
 }
-	return 0;
+	return zak;
 }
 
 

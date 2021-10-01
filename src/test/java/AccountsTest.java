@@ -1,6 +1,7 @@
 import static org.junit.Assert.*;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
@@ -25,6 +26,7 @@ public void setup()
 	
 	Acc.create_account("dawood", "Islambad","03016666600",105,"saving",21000, date, date, t, 0.0, 0.0);
 	
+	
 }
 	@Test
 	public void test_login_account_exist() {                      //when account exist
@@ -46,13 +48,18 @@ public void setup()
 	}
 	
 	@Test
-	public void test_Delete_account_exist() {                      //when account exist
+	public void test_Delete_account_exist()  {                      //when account exist
 		
 		 ByteArrayOutputStream ConsoleOutput= new ByteArrayOutputStream();
 
 		  System.setOut(new PrintStream(ConsoleOutput));
 		//  System.getProperty("line.separator");
-		  Acc.close_account(103);
+		  try {
+			Acc.close_account(103);
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
 		 assertEquals("Account founded and deleted\r\n",ConsoleOutput.toString());
 		 Acc.menuAdmin();
 		 Acc.menu1();
@@ -88,7 +95,12 @@ public void setup()
 
 		  System.setOut(new PrintStream(ConsoleOutput));
 		//  System.getProperty("line.separator");
-		  Acc.close_account(102);
+		  try {
+			Acc.close_account(102);
+		} catch (IOException e) {
+			System.out.println("An error occurred.");
+			e.printStackTrace();
+		}
 		 assertEquals("Account not found\r\n",ConsoleOutput.toString());
 		Acc.menuCustomerSaving();
 		
@@ -201,7 +213,7 @@ public void setup()
 		  System.setOut(new PrintStream(ConsoleOutput));
 		//  System.getProperty("line.separator");
 		  Acc.ZakatFun(102);
-		 assertEquals(" Account not found or balance is less then 20000/-\r\n",ConsoleOutput.toString());
+		 assertEquals("Account not found\r\n",ConsoleOutput.toString());
 		 
 		 
 		
